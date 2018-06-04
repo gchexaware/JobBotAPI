@@ -75,13 +75,7 @@ module.exports = function(app) {
                                 }
                               },
                               {
-                                "payload": {
-                                  "replies": [
-                                    "Candidate",
-                                    "Recruiter",
-                                    "Associate"
-                                  ]
-                                }
+                                "payload": replyObj
                               }
                             ]
                                 });             
