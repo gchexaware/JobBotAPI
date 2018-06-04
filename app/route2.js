@@ -58,7 +58,7 @@ module.exports = function(app) {
 
                     for (i in obj.advertisementList) {
                         x += "<h2>" + obj.advertisementList[i].jobTitle + "</h2>";
-                        replyObj[key].push(obj.advertisementList[i].jobTitle +"\n" +  obj.advertisementList[i].description);
+                        replyObj[key].push(obj.advertisementList[i].jobTitle);
                        
                     }      
                     console.log(x);
