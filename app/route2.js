@@ -62,7 +62,29 @@ module.exports = function(app) {
                        
                     }      
                     console.log(x);
-                    res.send(replyObj);                    
+                    //res.send(replyObj);       
+                    return res.json({
+                        
+                                    "fulfillmentText": "hello world",        
+                                    "fulfillmentMessages": [
+                              {
+                                "text": {
+                                  "text": [
+                                    "Hi. Welcome. Please select one of the options below"
+                                  ]
+                                }
+                              },
+                              {
+                                "payload": {
+                                  "replies": [
+                                    "Candidate",
+                                    "Recruiter",
+                                    "Associate"
+                                  ]
+                                }
+                              }
+                            ]
+                                });             
                 });
             });
             // post the data
