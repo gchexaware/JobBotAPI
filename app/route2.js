@@ -62,7 +62,9 @@ module.exports = function(app) {
                        
                     }      
                     console.log(x);
-                    res.send(replyObj);                    
+                    //res.send(replyObj);    
+                    return res.json(replyObj);
+                    
                 });
             });
             // post the data
