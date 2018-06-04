@@ -65,7 +65,7 @@ module.exports = function(app) {
                     //res.send(replyObj);       
                     return res.json({
                         
-                                    "fulfillmentText": "hello world",        
+                                    "fulfillmentText": "List of jobs",        
                                     "fulfillmentMessages": [
                               {
                                 "text": {
