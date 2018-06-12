@@ -7,6 +7,7 @@ module.exports = function(app) {
     const bodyParser = require('body-parser');
     var server = express()
     var querystring = require('querystring');
+    var NodeGeocoder = require('node-geocoder');
 
     // Service hosting details
     var hostname = 'dtuat.candidate.manpower.com';
@@ -33,16 +34,39 @@ module.exports = function(app) {
 
     app.post('/postJBot', (req, res) => {
       var mycustomresponse = "";
-      var inputAction = "keywordsearch";
-      //var inputAction = req.body.result.action;
+      //var inputAction = "locationsearch";
+      var inputAction = req.body.result.action;
       var replies = new Array();
       var http = require("http");
       var https = require("https");
       switch(inputAction)
       {
         case 'keywordsearch':
-            var keyword = "Java"
-            searchByKeyWord(res,keyword);
+            var keyword = req.body.data;
+            var lat = "";
+            var long = "";
+            searchByKeyWord(res,keyword,lat,long);
+        break;
+        case 'locationsearch':
+            var location = "chennai"//req.body.data;
+
+            // var options = {
+            //     provider: 'google',
+              
+            //     // Optional depending on the providers
+            //     httpAdapter: 'https', // Default
+            //     apiKey: 'AIzaSyDwH56E1XKZruHK0JbKEZsCnlV9qam4NSs', // for Mapquest, OpenCage, Google Premier
+            //     formatter: null         // 'gpx', 'string', ...
+            //   };
+            // var geocoder = NodeGeocoder(options);
+            // geocoder.geocode(location, function ( err, data ) {
+            //     console.log(JSON.stringify(data, null, 4));
+            // })
+            var keyWord = "";
+            var lat = "12.9715987";
+            var long = "77.5945627";
+            searchByKeyWord(res,keyWord,lat,long);
+            
         break;
 
         case 'jobDetail':
@@ -97,7 +121,10 @@ module.exports = function(app) {
         break; 
         case 'candidateContact':           
             getCandidateProfile(res,CONTACT);
-        break;   
+        break; 
+        case 'getBranchLocator':           
+            getBranchLocation(res);
+        break;  
         
         default:
         break;
@@ -165,13 +192,16 @@ module.exports = function(app) {
 
     //for serach by keyword method
 
-    function searchByKeyWord(response,keyword) {       
-        console.log("1");
-
-        keyword ="";        
+    function searchByKeyWord(response,keyword,latitude,longitude) {       
+        //keyword =""; 
+        var locationLatLong ="";
+        if(latitude != ""){
+            locationLatLong = '"latitude":"'+latitude+'","longitude":"'+longitude+'",';
+        }      
         
-        //var data = req.body.data;
-        var postdata = '{"countryCode":"'+siteCode+'","language":"en","keyWord":"' + keyword + '","locationId":"","maxDistance":"100","distanceUnit":"KM","startIndex":"1","numberOfResults":"50"}';
+
+        var postdata = '{"countryCode":"'+siteCode+'","language":"en","keyWord":"' + keyword + '","locationId":"",'+locationLatLong+'"maxDistance":"100","distanceUnit":"KM","startIndex":"1","numberOfResults":"50"}';
+        console.log(postdata);
           var options = {
 
                 host: hostname,
@@ -641,6 +671,67 @@ module.exports = function(app) {
                       });  
       }
 
+      function getBranchLocation(response,keyword) {       
+        keyword ="";        
+        
+        //var data = req.body.data;
+        var postdata = '{"latitude":0,"longitude":0,"maxDistance":50,"distanceUnit":"KM","startIndex":"0","maxResults":100}';
+          var options = {
+
+                host: hostname,
+                port: 443,
+                path: '/DirectTalent_CandidateMobile_REST/jaxrs/branch/findBranches/'+siteName+'/'+siteCode+'/'+language,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            };
+            var port = options.port == 443 ? https : http;
+            var reqPost = port.request(options, function(resPost)
+            {
+                var output = '';
+                resPost.setEncoding('utf8');
+        
+                resPost.on('data', function (chunk) {
+                    output += chunk;
+                });
+        
+                resPost.on('end', function() {
+                    console.log("output is = "+output);
+                    var obj = JSON.parse(output); 
+                    getBranchLocationCB(response,obj); 
+                       
+                });
+            });
+            // post the data
+            reqPost.write(postdata);
+            reqPost.on('error', function(err) {
+                //res.send('error: ' + err.message);
+                console.log(err);
+            });        
+            reqPost.end();            
+            console.log("4");
+    }    
+    
+    function getBranchLocationCB(res,responseObj){
+         
+        return res.json({
+            
+                        "fulfillmentText": "List of jobs",        
+                        "fulfillmentMessages": [
+                  {
+                    "text": {
+                      "text": [
+                        "Hi. Welcome. Please select one of the options below"
+                      ]
+                    }
+                  },
+                  {
+                    "payload": responseObj
+                  }
+                ]
+                    });  
+    }
 
 
       
