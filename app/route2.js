@@ -35,14 +35,18 @@ module.exports = function(app) {
     app.post('/postJBot', (req, res) => {
       var mycustomresponse = "";
       //var inputAction = "locationsearch";
-      var inputAction = req.body.result.action;
+      //console.log(JSON.stringify(req.body, null, 4));
+      var inputAction = req.body.queryResult.action;
       var replies = new Array();
       var http = require("http");
       var https = require("https");
       switch(inputAction)
       {
         case 'keywordsearch':
-            var keyword = req.body.data;
+       
+            var keyword = req.body.queryResult.queryText;
+           
+           // console.log("keyword="+keyword);
             var lat = "";
             var long = "";
             searchByKeyWord(res,keyword,lat,long);
