@@ -1,7 +1,9 @@
 // set up ======================================================================
 var express  = require('express');
 var app      = express(); 
-var port  	 = process.env.PORT || 8080; 
+var port  	 = process.env.PORT || 3000; 
+
+
 
 var morgan = require('morgan'); 		// log requests to the console (express4)
 var bodyParser = require('body-parser'); 	// pull information from HTML POST (express4)
