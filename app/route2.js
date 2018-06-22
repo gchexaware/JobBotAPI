@@ -7,7 +7,7 @@ module.exports = function(app) {
     const bodyParser = require('body-parser');
     var server = express()
     var querystring = require('querystring');
-    var NodeGeocoder = require('node-geocoder');
+    //var NodeGeocoder = require('node-geocoder');
 
     // Service hosting details
     var hostname = 'dtuat.candidate.manpower.com';
