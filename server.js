@@ -1,9 +1,13 @@
 // set up ======================================================================
 var express  = require('express');
 var app      = express(); 
-var port  	 = process.env.PORT || 5000; 
+//var port  	 = process.env.PORT || 5000; 
 
-
+var server_port = process.env.YOUR_PORT || process.env.PORT || 80;
+var server_host = process.env.YOUR_HOST || '0.0.0.0';
+app.listen(server_port, server_host, function() {
+    console.log('Listening on port %d', server_port);
+});
 
 var morgan = require('morgan'); 		// log requests to the console (express4)
 var bodyParser = require('body-parser'); 	// pull information from HTML POST (express4)
@@ -19,5 +23,5 @@ app.use(methodOverride());
 require('./app/route2.js')(app);
 
 // listen (start app with node server.js) ======================================
-app.listen(port);
-console.log("App listening on port " + port);
+//app.listen(port);
+//console.log("App listening on port " + port);
