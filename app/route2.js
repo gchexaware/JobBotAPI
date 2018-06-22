@@ -268,7 +268,7 @@ module.exports = function(app) {
                     }
                   },
                   {
-                    "payload": replyObj
+                    "payload": responseObj
                   }
                 ]
                     });  
