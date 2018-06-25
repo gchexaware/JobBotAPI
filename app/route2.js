@@ -37,6 +37,7 @@ module.exports = function(app) {
       //var inputAction = "locationsearch";
       //console.log(JSON.stringify(req.body, null, 4));
       var inputAction = req.body.queryResult.action;
+
       var replies = new Array();
       var http = require("http");
       var https = require("https");
@@ -74,7 +75,9 @@ module.exports = function(app) {
         break;
 
         case 'jobDetail':
-            var advertId = "1219638"
+            var advertId = req.body.data;//req.body.queryResult.jobID;
+            console.log("adv id "+advertId);
+            
             getJobDetails(res,advertId);
         break;
 
@@ -104,9 +107,7 @@ module.exports = function(app) {
             var firstName ="Thani";
             var lastname ="testing";
             registerUser(res,userEmail,password,firstName,lastname); 
-        break; 
-        
-
+        break;         
         case 'candidateProfile':
             var required ="";
             getCandidateProfile(res,required);
@@ -126,6 +127,18 @@ module.exports = function(app) {
         case 'candidateContact':           
             getCandidateProfile(res,CONTACT);
         break; 
+        // case 'updatecandidateContact':           
+        //     updateCandidateContact(res,CONTACT);
+        // break; 
+        // case 'updatecandidateSkills':           
+        //     getCandidateProfile(res,CONTACT);
+        // break;
+        // case 'updatecandidateEducation':           
+        //     getCandidateProfile(res,CONTACT);
+        // break; 
+        // case 'updatecandidateExperience':           
+        //     getCandidateProfile(res,CONTACT);
+        // break; 
         case 'getBranchLocator':           
             getBranchLocation(res);
         break;  
@@ -549,6 +562,67 @@ module.exports = function(app) {
                   ]
                       });  
       }
+
+      function updateCandidateContact(response,postjson){
+        var postdata = postjson;
+        var options = {
+
+              host: hostname,
+              port: 443,
+              path: '/DirectTalent_CandidateMobile_REST/jaxrs/sendemail/'+siteName+'/'+siteCode+'/'+language,
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': auth
+            },   
+          };
+          var port = options.port == 443 ? https : http;
+          var reqPost = port.request(options, function(resPost)
+          {
+              var output = '';
+              resPost.setEncoding('utf8');
+      
+              resPost.on('data', function (chunk) {
+                  output += chunk;
+              });
+      
+              resPost.on('end', function() {
+                  console.log("output = "+output);
+                  var obj = JSON.parse(output); 
+                  updateCandidateContactCB(response,obj); 
+                     
+              });
+          });
+          // post the data
+          reqPost.write(postdata);
+          reqPost.on('error', function(err) {
+              //res.send('error: ' + err.message);
+              console.log(err);
+          });        
+          reqPost.end();    
+      }
+
+      function updateCandidateContactCB(res,responseObj){
+        
+         
+           return res.json({
+               
+                           "fulfillmentText": "List of jobs",        
+                           "fulfillmentMessages": [
+                     {
+                       "text": {
+                         "text": [
+                           "Hi. Welcome. Please select one of the options below"
+                         ]
+                       }
+                     },
+                     {
+                       "payload": responseObj
+                     }
+                   ]
+                       });  
+       }
+ 
 
       function shareJobEmail(response,postjson) {       
         
