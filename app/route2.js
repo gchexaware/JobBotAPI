@@ -75,11 +75,17 @@ module.exports = function(app) {
         break;
 
         case 'jobDetail':
+            var exampleMessage = req.body.originalRequest.data.exampleMessage;
+            console.log("Example mesage "+exampleMessage);
             console.log("adv id1111111 "+req.body.queryResult);
             var advertId = "1219638";//req.body.queryResult.jobID;
             console.log("adv id "+advertId);
             
             getJobDetails(res,advertId);
+        break;
+
+        case 'hotjobs':           
+            getHotJobs();
         break;
 
         case 'saveJob':
@@ -349,6 +355,66 @@ module.exports = function(app) {
                 ]
                     });  
     }
+
+
+    function getHotJobs() {       
+        
+            var options = {
+  
+                  host: 'manpower.com',
+                  port: 443,
+                  path: '/wps/wcm/connect/USA-en/Manpower/Footer%20Jobs/Default?srv=cmpnt&source=library&cmpntname=USA-en/JSON/Nav_Industry_Location_HotJobs',
+                  method: 'GET',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+              };
+              var port = options.port == 443 ? https : http;
+              var reqPost = port.request(options, function(resPost)
+              {
+                  var output = '';
+                  resPost.setEncoding('utf8');
+          
+                  resPost.on('data', function (chunk) {
+                      output += chunk;
+                  });
+          
+                  resPost.on('end', function() {
+                      var obj = JSON.parse(output); 
+                      getHotJobsCB(response,obj); 
+                         
+                  });
+              });
+              // post the data
+              //reqPost.write(postdata);
+              reqPost.on('error', function(err) {
+                  //res.send('error: ' + err.message);
+                  console.log(err);
+              });        
+              reqPost.end();            
+             
+      }    
+      
+      function getHotJobsCB(res,responseObj){
+       
+          //res.send(replyObj);       
+          return res.json({
+              
+                          "fulfillmentText": "List of jobs",        
+                          "fulfillmentMessages": [
+                    {
+                      "text": {
+                        "text": [
+                          "List of Hot Jobs"
+                        ]
+                      }
+                    },
+                    {
+                      "payload": responseObj
+                    }
+                  ]
+                      });  
+      }
 
     function saveJob(response,advertId) {       
         
