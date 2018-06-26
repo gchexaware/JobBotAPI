@@ -35,7 +35,7 @@ module.exports = function(app) {
     app.post('/postJBot', (req, res) => {
       var mycustomresponse = "";
       //var inputAction = "locationsearch";
-      //console.log(JSON.stringify(req.body, null, 4));
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>> = "+JSON.stringify(req.body, null, 4));
       var inputAction = req.body.queryResult.action;
 
       var replies = new Array();
