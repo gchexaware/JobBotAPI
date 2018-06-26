@@ -75,6 +75,7 @@ module.exports = function(app) {
         break;
 
         case 'jobDetail':
+            console.log("adv id1111111 "+req.body.queryResult);
             var advertId = req.body.data;//req.body.queryResult.jobID;
             console.log("adv id "+advertId);
             
