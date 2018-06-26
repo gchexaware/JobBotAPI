@@ -75,7 +75,7 @@ module.exports = function(app) {
         break;
 
         case 'jobDetail':
-            var exampleMessage = req.body.originalRequest.data.exampleMessage;
+            var exampleMessage = req.body.originalDetectIntentRequest.payload.exampleMessage;
             console.log("Example mesage "+exampleMessage);
             console.log("adv id1111111 "+req.body.queryResult);
             var advertId = "1219638";//req.body.queryResult.jobID;
