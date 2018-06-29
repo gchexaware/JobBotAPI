@@ -67,6 +67,7 @@ module.exports = function(app) {
             // geocoder.geocode(location, function ( err, data ) {
             //     console.log(JSON.stringify(data, null, 4));
             // })
+            
             var keyWord = "";
             var lat = "12.9715987";
             var long = "77.5945627";
@@ -153,7 +154,7 @@ module.exports = function(app) {
             getBranchLocation(res);
         break;  
         case 'generateOTP': 
-            var mobileNo = req.body.originalDetectIntentRequest.payload.mobileNo;
+            var mobileNo = 9502842849//req.body.originalDetectIntentRequest.payload.mobileNo;
             generateOTP(res,mobileNo);
         break;
         case 'verifyOTP': 
@@ -1066,7 +1067,7 @@ module.exports = function(app) {
 
       return res.json({
           
-                      "fulfillmentText": "List of jobs",        
+                      "fulfillmentText": message,        
                       "fulfillmentMessages": [
                 {
                   "text": {
