@@ -154,7 +154,7 @@ module.exports = function(app) {
             getBranchLocation(res);
         break;  
         case 'generateOTP': 
-            var mobileNo = 9502842849//req.body.originalDetectIntentRequest.payload.mobileNo;
+            var mobileNo = "";//9502842849//req.body.originalDetectIntentRequest.payload.mobileNo;
             generateOTP(res,mobileNo);
         break;
         case 'verifyOTP': 
@@ -936,12 +936,12 @@ module.exports = function(app) {
          
         return res.json({
             
-                        "fulfillmentText": "List of jobs",        
+                        "fulfillmentText": "OTP sent your mobile No. Please enter your 6 digit OTP",        
                         "fulfillmentMessages": [
                   {
                     "text": {
                       "text": [
-                        "Hi. Welcome. Please select one of the options below"
+                        ""
                       ]
                     }
                   },
