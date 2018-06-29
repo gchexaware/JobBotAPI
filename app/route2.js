@@ -76,30 +76,33 @@ module.exports = function(app) {
 
         case 'jobDetail':
             var advertId = req.body.originalDetectIntentRequest.payload.jobID;
-           // var advertId = "1219638";//req.body.queryResult.jobID;
             console.log("adv id "+advertId);            
             getJobDetails(res,advertId);
         break;
 
         case 'hotjobs':           
-            getHotJobs();
+            getHotJobs(res);
         break;
 
         case 'saveJob':
-            var advertId = "1219638"
+            var advertId = req.body.originalDetectIntentRequest.payload.jobID;
+            console.log("adv id "+advertId);            
             saveJob(res,advertId);
         break;
 
         case 'applyJob':
-            var advertId = "1219638"
+            var advertId = req.body.originalDetectIntentRequest.payload.jobID;
+            console.log("adv id "+advertId);            
             applyJob(res,advertId);
         break;
         case 'shareJobEmail':
-            var advertId = "1219638"
+            var advertId = req.body.originalDetectIntentRequest.payload.jobID;
+            console.log("adv id "+advertId);            
+       
             var receiverEmail = "thani.mca@gmail.com"
-            var senderFirstName = "test"
-            var senderLastName = "india"
-            var receiverName = "Thani"
+            var senderFirstName = "Job"
+            var senderLastName = "Bot"
+            var receiverName = ""
             var senderEmail = "test@india2.com"
             var message = "HI.."
             var postdata = '{"advertId":"'+advertId+'","receiverEmail":"'+receiverEmail+'","senderFirstName":"'+senderFirstName+'","senderLastName":"'+senderLastName+'","receiverName":"'+receiverName+'","personalMessage":"'+message+'","senderEmail":"'+senderEmail+'"}';
@@ -111,6 +114,9 @@ module.exports = function(app) {
             var firstName ="Thani";
             var lastname ="testing";
             registerUser(res,userEmail,password,firstName,lastname); 
+        break;
+        case 'getAllEnumurations':            
+            getAllEnumurations(res);
         break;         
         case 'candidateProfile':
             var required ="";
@@ -146,70 +152,16 @@ module.exports = function(app) {
         case 'getBranchLocator':           
             getBranchLocation(res);
         break;  
+        case 'generateOTP': 
+        var mobileNo = '9884320227';         
+            generateOTP(res,mobileNo);
+        break;  
+        
         
         default:
         break;
       }  
     });
-
-   /* function getresumeTips() {  
-        var data = "{obj}";      
-        res.status(200).send(data);
-    };
-    app.get('/api/careertips', function(req, res) {  
-        res.status(200).send("resumetips");   
-    });
-    app.get('/api/discoverpath', function(req, res) {   
-        res.status(200).send("Please find some of the links to discover your career path. To view <a href='https://www.manpower.com/pathways/'> Click here</a>");    
-    });
-    app.get('/api/learnskill', function(req, res) { 
-        res.status(200).send("resumetips");    
-    });
-    app.get('/api/manageprofile', function(req, res) {
-        res.status(200).send("resumetips");      
-    });
-    app.get('/api/hotjobs', function(req, res) {
-        res.status(200).send("resumetips");      
-    });
-    app.get('/api/industryjobs', function(req, res) {   
-        res.status(200).send("resumetips");    
-    });
-    app.get('/api/locationjobs', function(req, res) {   
-        res.status(200).send("resumetips");    
-    });
-    app.get('/api/viewprofile', function(req, res) {
-        res.status(200).send("resumetips");      
-    });
-    app.get('/api/updateprofile', function(req, res) {
-        res.status(200).send("resumetips");      
-    });
-    app.get('/api/viewskill', function(req, res) {  
-        res.status(200).send("resumetips");    
-    });
-    app.get('/api/vieweducation', function(req, res) {
-        res.status(200).send("resumetips");      
-    });
-    app.get('/api/viewexperience', function(req, res) {
-        res.status(200).send("resumetips");      
-    });
-    app.get('/api/viewcontact', function(req, res) {
-        res.status(200).send("resumetips");      
-    });
-    app.get('/api/sharejob', function(req, res) {
-        res.status(200).send("resumetips");      
-    });
-    app.get('/api/savejob', function(req, res) {    
-        res.status(200).send("resumetips");    
-    });
-    app.get('/api/applyjob', function(req, res) {   
-        res.status(200).send("applyjob");    
-    });
-    app.get('/api/register', function(req, res) {
-        res.status(200).send("resumetips");      
-    });
-    app.get('/api/login', function(req, res) {  
-        res.status(200).send("resumetips");    
-    });*/
 
     //for serach by keyword method
 
@@ -291,6 +243,66 @@ module.exports = function(app) {
                     });  
     }
 
+    function getAllEnumurations(response) {       
+        
+          var postdata = '{"enumTypes":["contractType","hoursWorked","workShifts","sortingCriteria","industrySectors","company","country","phoneType","month","year","educationDegrees","dashboardContent","residenceStatus","nationality","yearsOfExp","skillLevel"]}';
+            var options = {
+  
+                  host: hostname,
+                  port: 443,
+                  path: '/DirectTalent_CandidateMobile_REST/jaxrs/enumerations/findMultiple/'+siteName+'/'+siteCode+'/'+language,
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+              };
+              var port = options.port == 443 ? https : http;
+              var reqPost = port.request(options, function(resPost)
+              {
+                  var output = '';
+                  resPost.setEncoding('utf8');
+          
+                  resPost.on('data', function (chunk) {
+                      output += chunk;
+                  });
+          
+                  resPost.on('end', function() {
+                      var obj = JSON.parse(output); 
+                      getAllEnumurationsCB(response,obj); 
+                         
+                  });
+              });
+              // post the data
+              reqPost.write(postdata);
+              reqPost.on('error', function(err) {
+                  //res.send('error: ' + err.message);
+                  console.log(err);
+              });        
+              reqPost.end();            
+             
+      }    
+      
+      function getAllEnumurationsCB(res,responseObj){
+       
+          //res.send(replyObj);       
+          return res.json({
+              
+                          "fulfillmentText": "List of jobs",        
+                          "fulfillmentMessages": [
+                    {
+                      "text": {
+                        "text": [
+                          "List of Enumurations"
+                        ]
+                      }
+                    },
+                    {
+                      "payload": responseObj
+                    }
+                  ]
+                      });  
+      }
+
     //Get Job details
 
     function getJobDetails(response,advertId) {       
@@ -354,7 +366,7 @@ module.exports = function(app) {
     }
 
 
-    function getHotJobs() {       
+    function getHotJobs(response) {       
         
             var options = {
   
@@ -465,7 +477,7 @@ module.exports = function(app) {
                     {
                       "text": {
                         "text": [
-                          "Hi. Welcome. Please select one of the options below"
+                          ""
                         ]
                       }
                     },
@@ -875,6 +887,68 @@ module.exports = function(app) {
                     });  
     }
 
+    function generateOTP(response,mobileNo) {  
+        console.log("inside the function........")     ;
+          var options = {
 
+                host: '2factor.in',
+                port: 443,
+                path: '/API/V1/53c62617-63ca-11e8-a895-0200cd936042/SMS/+91'+mobileNo+'/AUTOGEN',
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            };
+            var port = options.port == 443 ? https : http;
+            var reqPost = port.request(options, function(resPost)
+            {
+                var output = '';
+                resPost.setEncoding('utf8');
+        
+                resPost.on('data', function (chunk) {
+                    output += chunk;
+                });
+        
+                resPost.on('end', function() {
+                    console.log("output is = "+output);
+                    var obj = JSON.parse(output); 
+                    generateOTPCB(response,obj); 
+                       
+                });
+            });
+            // post the data
+           // reqPost.write(postdata);
+            reqPost.on('error', function(err) {
+                //res.send('error: ' + err.message);
+                console.log(err);
+            });        
+            reqPost.end();            
+            console.log("4");
+    }    
+    
+    function generateOTPCB(res,responseObj){
+        console.log("inside the function2222222222........")   
+         
+        return res.json({
+            
+                        "fulfillmentText": "List of jobs",        
+                        "fulfillmentMessages": [
+                  {
+                    "text": {
+                      "text": [
+                        "Hi. Welcome. Please select one of the options below"
+                      ]
+                    }
+                  },
+                  {
+                    "payload": responseObj
+                  }
+                ]
+                    });  
+    }
+
+
+
+    
       
 };
