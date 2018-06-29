@@ -109,8 +109,8 @@ module.exports = function(app) {
             shareJobEmail(res,postdata);
         break;
         case 'registerUser':
-            var userEmail ="rest@expind1.com";
-            var password ="MA4P0W3r123";
+            var userEmail ="rest1122334@expind1.com";
+            var password ="password";//"MA4P0W3r123";
             var firstName ="Thani";
             var lastname ="testing";
             registerUser(res,userEmail,password,firstName,lastname); 
@@ -153,11 +153,17 @@ module.exports = function(app) {
             getBranchLocation(res);
         break;  
         case 'generateOTP': 
-        var mobileNo = '9884320227';         
+            var mobileNo = req.body.originalDetectIntentRequest.payload.mobileNo;
             generateOTP(res,mobileNo);
-        break;  
-        
-        
+        break;
+        case 'verifyOTP': 
+            var sessionId = req.body.originalDetectIntentRequest.payload.sessionId;
+            var otp = req.body.originalDetectIntentRequest.payload.otp;            
+            verifyOTP(res,sessionId,otp);
+        break;
+        case 'checkUserExist':               
+            checkUserExist(res);
+            break;  
         default:
         break;
       }  
@@ -240,7 +246,7 @@ module.exports = function(app) {
                     "payload": responseObj
                   }
                 ]
-                    });  
+            });  
     }
 
     function getAllEnumurations(response) {       
@@ -771,7 +777,7 @@ module.exports = function(app) {
   
                   host: hostname,
                   port: 443,
-                  path: '/DirectTalent_CandidateMobile_REST/jaxrs/register/'+siteName+'/'+siteCode+'/'+language,
+                  path: '/DirectTalent_CandidateMobile_REST/jaxrs/candidate/register/'+siteName+'/'+siteCode+'/'+language,
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json'                   
@@ -888,7 +894,6 @@ module.exports = function(app) {
     }
 
     function generateOTP(response,mobileNo) {  
-        console.log("inside the function........")     ;
           var options = {
 
                 host: '2factor.in',
@@ -927,7 +932,6 @@ module.exports = function(app) {
     }    
     
     function generateOTPCB(res,responseObj){
-        console.log("inside the function2222222222........")   
          
         return res.json({
             
@@ -947,6 +951,136 @@ module.exports = function(app) {
                     });  
     }
 
+    function VerifyOTP(response,sessionId,otp) {  
+          var options = {
+
+                host: '2factor.in',
+                port: 443,
+                path: 'API/V1/53c62617-63ca-11e8-a895-0200cd936042/SMS/VERIFY/'+sessionId+'/'+otp+'',
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            };
+            var port = options.port == 443 ? https : http;
+            var reqPost = port.request(options, function(resPost)
+            {
+                var output = '';
+                resPost.setEncoding('utf8');
+        
+                resPost.on('data', function (chunk) {
+                    output += chunk;
+                });
+        
+                resPost.on('end', function() {
+                    console.log("output is = "+output);
+                    var obj = JSON.parse(output); 
+                    VerifyOTPCB(response,obj); 
+                       
+                });
+            });
+            // post the data
+           // reqPost.write(postdata);
+            reqPost.on('error', function(err) {
+                //res.send('error: ' + err.message);
+                console.log(err);
+            });        
+            reqPost.end();            
+            console.log("4");
+    }    
+    
+    function VerifyOTPCB(res,responseObj){
+        return res.json({
+            
+                        "fulfillmentText": "List of jobs",        
+                        "fulfillmentMessages": [
+                  {
+                    "text": {
+                      "text": [
+                        ""
+                      ]
+                    }
+                  },
+                  {
+                    "payload": responseObj
+                  }
+                ]
+                    });  
+    }
+
+    function checkUserExist(response) {  
+        var options = {
+
+              host: hostname,
+              port: 443,
+              path: '/DirectTalent_CandidateMobile_REST/jaxrs/candidate/exists/'+siteName+'/'+siteCode+'/'+language+'/'+username,
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+          };
+          var port = options.port == 443 ? https : http;
+          var reqPost = port.request(options, function(resPost)
+          {
+              var output = '';
+              resPost.setEncoding('utf8');
+      
+              resPost.on('data', function (chunk) {
+                  output += chunk;
+              });
+      
+              resPost.on('end', function() {
+                  console.log("output is = "+output);
+                  var obj = JSON.parse(output); 
+                  checkUserExistCB(response,obj); 
+                     
+              });
+          });
+          // post the data
+         // reqPost.write(postdata);
+          reqPost.on('error', function(err) {
+              //res.send('error: ' + err.message);
+              console.log(err);
+          });        
+          reqPost.end();            
+          console.log("4");
+  }    
+  
+  function checkUserExistCB(res,responseObj){
+    var message = "Thanks.You are not register with manpower.These are the options that I can help you with. Please select one of them"
+    
+    var replyObj = {}
+    var key = 'replies';
+    replyObj[key] = [];
+    replyObj[key].push("Register");
+    replyObj[key].push("Continue as Guest");
+    replyObj[key].push("Try other email");
+
+       if(responseObj == "true" || responseObj == true){
+        message = "Thanks.You are existing user with manpower. These are the options that I can help you with. Please select one of them"
+        replyObj[key] = [];
+        replyObj[key].push("Login");
+        replyObj[key].push("Continue as Guest");
+        replyObj[key].push("Try other email");
+       } 
+
+      return res.json({
+          
+                      "fulfillmentText": "List of jobs",        
+                      "fulfillmentMessages": [
+                {
+                  "text": {
+                    "text": [
+                      ""
+                    ]
+                  }
+                },
+                {
+                  "payload": replyObj
+                }
+              ]
+                  });  
+  }
 
 
     
