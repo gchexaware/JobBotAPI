@@ -568,6 +568,7 @@ module.exports = function(app) {
            // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>> = "+JSON.stringify(responseobj.phones, null, 4));            
             mobileNo = responseobj.phones[0].number;    
             //console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>111 = "+mobileNo);
+            mobileNo = '9884320227';
             generateOTP(res,mobileNo);
         }else if(required == CONTACT){            
            /* var replyObj = {}
@@ -1012,7 +1013,10 @@ module.exports = function(app) {
     
     function VerifyOTPCB(res,responseObj){
         var message = "Invalid OTP, Please Enter valid OTP"
-        
+        var key = 'replies';
+        replyObj[key] = [];
+        replyObj[key].push("Re-enter OTP");
+        replyObj[key].push("Send OTP again");
            if(responseObj.Status == "Success"){
             message = "OTP authentication is successfull,Please select the option below"
             replyObj[key] = [];
