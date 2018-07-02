@@ -11,13 +11,13 @@ module.exports = function(app) {
 
     // Service hosting details
     var hostname = 'dtuat.candidate.manpower.com';
-    var siteName = 'INMPNetPro';
-    var siteCode = 'IND';
+    var siteName = 'USCampus';
+    var siteCode = 'USA';
     var language = 'en';
 
     //User details for call authenticated service
-    var username = "test@india2.com";
-    var passw = 'plokijuh';
+    var username = "siva@raman5.com";
+    var passw = 'password';
     var auth = 'Basic ' + new Buffer(username + ':' + passw).toString('base64');
 
     var SKILLS = 'skills'
