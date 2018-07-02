@@ -160,9 +160,11 @@ module.exports = function(app) {
            // generateOTP(res,mobileNo);
         break;
         case 'verifyOTP': 
-            var sessionId = req.body.originalDetectIntentRequest.payload.sessionId;
-            var otp = req.body.originalDetectIntentRequest.payload.otp;            
-            verifyOTP(res,sessionId,otp);
+             var sessionId = req.body.originalDetectIntentRequest.payload.sessionId;
+             var otp = req.body.originalDetectIntentRequest.payload.otp;   
+            //var sessionId = 'c8035802-7b90-11e8-a895-0200cd936042';
+            //var otp ='828114';         
+            VerifyOTP(res,sessionId,otp);
         break;
         case 'checkUserExist':               
             checkUserExist(res);
@@ -974,6 +976,7 @@ module.exports = function(app) {
     }
 
     function VerifyOTP(response,sessionId,otp) {  
+        
           var options = {
 
                 host: '2factor.in',
