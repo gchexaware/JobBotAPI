@@ -548,15 +548,22 @@ module.exports = function(app) {
 
         var retResponse = responseobj;   
         var replyObj = {}
+        var key = '';
         if(required== SKILLS){
-            var key = 'skills';
+            key = 'skills';
             replyObj[key] = [];
             replyObj[key].push(responseobj.skills);
             retResponse = replyObj;
         }else if(required== EDUCATION){
-            retResponse = responseobj.educations;   
+            key = 'educaton';
+            replyObj[key] = [];
+            replyObj[key].push(responseobj.educations);
+            retResponse = replyObj;   
         }else if(required == EXPERIENCE){
-            retResponse = responseobj.jobJistory;    
+            key = 'experience';
+            replyObj[key] = [];
+            replyObj[key].push(responseobj.jobJistory);
+            retResponse = replyObj;    
         }else if(required == OTP){
            // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>> = "+JSON.stringify(responseobj.phones, null, 4));            
             mobileNo = responseobj.phones[0].number;    
