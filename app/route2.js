@@ -510,7 +510,7 @@ module.exports = function(app) {
                 path: '/DirectTalent_CandidateMobile_REST/jaxrs/candidateProfile/'+siteName+'/'+siteCode+'/'+language+'/'+username,
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/octet-stream',
                     'Authorization': auth
                 },                
             };
