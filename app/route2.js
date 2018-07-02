@@ -585,7 +585,7 @@ module.exports = function(app) {
         if(required != OTP){
         return res.json({
             
-                        "fulfillmentText": "List of jobs",        
+                        "fulfillmentText": "",        
                         "fulfillmentMessages": [
                   {
                     "text": {
@@ -1011,9 +1011,19 @@ module.exports = function(app) {
     }    
     
     function VerifyOTPCB(res,responseObj){
+        var message = "Invalid OTP, Please Enter valid OTP"
+        
+           if(responseObj.Status == "Success"){
+            message = "OTP authentication is successfull,Please select the option below"
+            replyObj[key] = [];
+            replyObj[key].push("Manage Profile");
+            replyObj[key].push("Job Tracker");
+            replyObj[key].push("Growth Tips");
+           } 
+    
         return res.json({
             
-                        "fulfillmentText": "List of jobs",        
+                        "fulfillmentText": message,        
                         "fulfillmentMessages": [
                   {
                     "text": {
@@ -1023,7 +1033,7 @@ module.exports = function(app) {
                     }
                   },
                   {
-                    "payload": responseObj
+                    "payload": replyObj
                   }
                 ]
                     });  
