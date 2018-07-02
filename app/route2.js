@@ -510,7 +510,7 @@ module.exports = function(app) {
                 path: '/DirectTalent_CandidateMobile_REST/jaxrs/candidateProfile/'+siteName+'/'+siteCode+'/'+language+'/'+username,
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/octet-stream',
+                    'Content-Type': 'application/json',
                     'Authorization': auth
                 },                
             };
@@ -547,8 +547,12 @@ module.exports = function(app) {
     function getCandidateProfileCB(res,responseobj,required){
 
         var retResponse = responseobj;   
+        var replyObj = {}
         if(required== SKILLS){
-            retResponse = responseobj.skills;
+            var key = 'skills';
+            replyObj[key] = [];
+            replyObj[key].push(responseobj.skills);
+            retResponse = replyObj;
         }else if(required== EDUCATION){
             retResponse = responseobj.educations;   
         }else if(required == EXPERIENCE){
