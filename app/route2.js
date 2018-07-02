@@ -24,6 +24,7 @@ module.exports = function(app) {
     var EDUCATION = 'education'
     var EXPERIENCE = 'experience'
     var CONTACT = 'contact'
+    var OTP = 'otp'
     
 
    
@@ -154,8 +155,9 @@ module.exports = function(app) {
             getBranchLocation(res);
         break;  
         case 'generateOTP': 
-            var mobileNo = "";//9502842849//req.body.originalDetectIntentRequest.payload.mobileNo;
-            generateOTP(res,mobileNo);
+           // var mobileNo = "";//9502842849//req.body.originalDetectIntentRequest.payload.mobileNo;
+            getCandidateProfile(res,OTP);
+           // generateOTP(res,mobileNo);
         break;
         case 'verifyOTP': 
             var sessionId = req.body.originalDetectIntentRequest.payload.sessionId;
@@ -551,6 +553,11 @@ module.exports = function(app) {
             retResponse = responseobj.educations;   
         }else if(required == EXPERIENCE){
             retResponse = responseobj.jobJistory;    
+        }else if(required == OTP){
+           // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>> = "+JSON.stringify(responseobj.phones, null, 4));            
+            mobileNo = responseobj.phones[0].number;    
+            //console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>111 = "+mobileNo);
+            generateOTP(res,mobileNo);
         }else if(required == CONTACT){            
            /* var replyObj = {}
             var key = 'contact';
@@ -564,7 +571,7 @@ module.exports = function(app) {
       
         }
         //res.send(retResponse);  
-
+        if(required != OTP){
         return res.json({
             
                         "fulfillmentText": "List of jobs",        
@@ -581,6 +588,7 @@ module.exports = function(app) {
                   }
                 ]
                     });         
+                }
     }
 
     function applyJob(response,advertId) {       
@@ -895,6 +903,7 @@ module.exports = function(app) {
     }
 
     function generateOTP(response,mobileNo) {  
+        console.log("Mobile Number = "+mobileNo);
           var options = {
 
                 host: '2factor.in',
@@ -1055,7 +1064,7 @@ module.exports = function(app) {
     replyObj[key] = [];
     replyObj[key].push("Register");
     replyObj[key].push("Continue as Guest");
-    replyObj[key].push("Try other email");
+    //replyObj[key].push("Try other email");
 
        if(responseObj == "true" || responseObj == true){
         message = "Thanks.You are existing user with manpower. These are the options that I can help you with. Please select one of them"
