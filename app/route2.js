@@ -100,15 +100,15 @@ module.exports = function(app) {
         break;
         case 'shareJobEmail':
             var advertId = req.body.originalDetectIntentRequest.payload.jobID;
-            var reciverEmail = req.body.originalDetectIntentRequest.payload.receiverEmail;
+            var receiverEmail = req.body.originalDetectIntentRequest.payload.receiverEmail;
             console.log("adv id "+advertId);            
        
             //var receiverEmail = "thani.mca@gmail.com"
-            var senderFirstName = "Job"
-            var senderLastName = "Bot"
+            var senderFirstName = "Thani"
+            var senderLastName = ""
             var receiverName = ""
-            var senderEmail = "test@india2.com"
-            var message = "HI.."
+            var senderEmail = "thani.mca@gmail.com"
+            var message = "This is interesting job is posted on Manpower. Please have a look.."
             var postdata = '{"advertId":"'+advertId+'","receiverEmail":"'+receiverEmail+'","senderFirstName":"'+senderFirstName+'","senderLastName":"'+senderLastName+'","receiverName":"'+receiverName+'","personalMessage":"'+message+'","senderEmail":"'+senderEmail+'"}';
             shareJobEmail(res,postdata);
         break;
@@ -482,7 +482,12 @@ module.exports = function(app) {
       
       function saveJobCB(res,responseObj){
        
-          //res.send(replyObj);       
+        var replyObj = {}
+        var key = '';            
+            key = 'response';
+            replyObj[key] = [];
+            replyObj[key].push(responseObj);
+            retResponse = replyObj;;       
           return res.json({
               
                           "fulfillmentText": "List of jobs",        
@@ -495,7 +500,7 @@ module.exports = function(app) {
                       }
                     },
                     {
-                      "payload": responseObj
+                      "payload": retResponse
                     }
                   ]
                       });  
@@ -779,7 +784,12 @@ module.exports = function(app) {
       }    
       
     function shareJobEmailCB(res,responseObj){
-       
+        var replyObj = {}
+        var key = '';            
+            key = 'response';
+            replyObj[key] = [];
+            replyObj[key].push(responseObj);
+            retResponse = replyObj;
         
           return res.json({
               
@@ -793,7 +803,7 @@ module.exports = function(app) {
                       }
                     },
                     {
-                      "payload": responseObj
+                      "payload": retResponse
                     }
                   ]
                       });  
