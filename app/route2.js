@@ -19,6 +19,7 @@ module.exports = function(app) {
     var username = "siva@raman5.com";
     var passw = 'password';
     var auth = 'Basic ' + new Buffer(username + ':' + passw).toString('base64');
+    console.log("autheeeee= "+auth);
 
     var SKILLS = 'skills'
     var EDUCATION = 'education'
@@ -99,9 +100,10 @@ module.exports = function(app) {
         break;
         case 'shareJobEmail':
             var advertId = req.body.originalDetectIntentRequest.payload.jobID;
+            var reciverEmail = req.body.originalDetectIntentRequest.payload.receiverEmail;
             console.log("adv id "+advertId);            
        
-            var receiverEmail = "thani.mca@gmail.com"
+            //var receiverEmail = "thani.mca@gmail.com"
             var senderFirstName = "Job"
             var senderLastName = "Bot"
             var receiverName = ""
@@ -649,10 +651,16 @@ module.exports = function(app) {
       
     function applyJobCB(res,responseObj){
        
+            var replyObj = {}
+            var key = '';            
+                key = 'response';
+                replyObj[key] = [];
+                replyObj[key].push(responseObj);
+                retResponse = replyObj;
         
           return res.json({
               
-                          "fulfillmentText": "List of jobs",        
+                          "fulfillmentText": "",        
                           "fulfillmentMessages": [
                     {
                       "text": {
@@ -662,7 +670,7 @@ module.exports = function(app) {
                       }
                     },
                     {
-                      "payload": responseObj
+                      "payload": retResponse
                     }
                   ]
                       });  
