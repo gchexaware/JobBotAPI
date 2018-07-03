@@ -158,9 +158,14 @@ module.exports = function(app) {
         break;  
         case 'generateOTP': 
            // var mobileNo = "";//9502842849//req.body.originalDetectIntentRequest.payload.mobileNo;
-            getCandidateProfile(res,OTP);
+           // getCandidateProfile(res,OTP);
            // generateOTP(res,mobileNo);
         break;
+        case 'associateOTP': 
+        var mobileNo = "9502842849";//9502842849//req.body.originalDetectIntentRequest.payload.mobileNo;
+        // getCandidateProfile(res,OTP);
+         //generateOTP(res,mobileNo);
+     break;
         case 'verifyOTP': 
              var sessionId = req.body.originalDetectIntentRequest.payload.sessionId;
              var otp = req.body.originalDetectIntentRequest.payload.otp;   
@@ -170,7 +175,13 @@ module.exports = function(app) {
         break;
         case 'checkUserExist':               
             checkUserExist(res);
-            break;  
+        break;  
+        case 'getSavedJobs':        
+            getSavedJobs(res);
+        break;
+        case 'getAppliedJobs':        
+            getAppliedJobs(res);
+         break;
         default:
         break;
       }  
@@ -918,7 +929,7 @@ module.exports = function(app) {
          
         return res.json({
             
-                        "fulfillmentText": "List of jobs",        
+                        "fulfillmentText": "",        
                         "fulfillmentMessages": [
                   {
                     "text": {
@@ -1103,7 +1114,7 @@ module.exports = function(app) {
   }    
   
   function checkUserExistCB(res,responseObj){
-    var message = "Thanks.You are not register with manpower.These are the options that I can help you with. Please select one of them"
+    var message = "Thanks.You have not registered with manpower.Pick one of the options below to continue."
     
     var replyObj = {}
     var key = 'replies';
@@ -1113,11 +1124,10 @@ module.exports = function(app) {
     //replyObj[key].push("Try other email");
 
        if(responseObj == "true" || responseObj == true){
-        message = "Thanks.You are existing user with manpower. These are the options that I can help you with. Please select one of them"
+        message = "Thanks.Welcome.You are an existing user with manpower. What you would like to do next?."
         replyObj[key] = [];
-        replyObj[key].push("Login");
+        replyObj[key].push("Login with secured code");
         replyObj[key].push("Continue as Guest");
-        replyObj[key].push("Try other email");
        } 
 
       return res.json({
@@ -1138,7 +1148,127 @@ module.exports = function(app) {
                   });  
   }
 
+  
+  function getSavedJobs(res){
+    var options = {
+          host: hostname,
+          port: 443,
+          path: '/DirectTalent_CandidateMobile_REST/jaxrs/candidatejobs/getsavedjobs/'+siteName+'/'+siteCode+'/'+language+'/'+username,
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': auth
+          },                
+      };
+      
+      console.log("auth = "+auth);
+      var port = options.port == 443 ? https : http;
+      var reqPost = port.request(options, function(resPost)
+      {
+          var output = '';
+          resPost.setEncoding('utf8');
+  
+          resPost.on('data', function (chunk) {
+              output += chunk;
+          });
+  
+          resPost.on('end', function() {
+              var responseobj = JSON.parse(output);  
+             
+              console.log(responseobj);
+              getSavedJobsCB(res,responseobj);
+                 
+          });
+      });
+      // post the data
+     // reqPost.write(postdata);
+      reqPost.on('error', function(err) {
+          //res.send('error: ' + err.message);
+          console.log(err);
+      });        
+      reqPost.end();            
+      console.log("4");
+}
 
+function getSavedJobsCB(res,responseobj){  
+  return res.json({
+      
+                  "fulfillmentText": "",        
+                  "fulfillmentMessages": [
+            {
+              "text": {
+                "text": [
+                  "Hi. Welcome. Please select one of the options below"
+                ]
+              }
+            },
+            {
+              "payload": responseobj
+            }
+          ]
+              });         
+          }
+
+
+          function getAppliedJobs(res){
+            var options = {
+                  host: hostname,
+                  port: 443,
+                  path: '/DirectTalent_CandidateMobile_REST/jaxrs/jobapplication/myapplications/'+siteName+'/'+siteCode+'/'+language+'/'+username,
+                  method: 'GET',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': auth
+                  },                
+              };
+              
+              console.log("auth = "+auth);
+              var port = options.port == 443 ? https : http;
+              var reqPost = port.request(options, function(resPost)
+              {
+                  var output = '';
+                  resPost.setEncoding('utf8');
+          
+                  resPost.on('data', function (chunk) {
+                      output += chunk;
+                  });
+          
+                  resPost.on('end', function() {
+                      var responseobj = JSON.parse(output);  
+                     
+                      console.log(responseobj);
+                      getAppliedJobsCB(res,responseobj);
+                         
+                  });
+              });
+              // post the data
+             // reqPost.write(postdata);
+              reqPost.on('error', function(err) {
+                  //res.send('error: ' + err.message);
+                  console.log(err);
+              });        
+              reqPost.end();            
+              console.log("4");
+        }
+        
+        function getAppliedJobsCB(res,responseobj){  
+          return res.json({
+              
+                          "fulfillmentText": "",        
+                          "fulfillmentMessages": [
+                    {
+                      "text": {
+                        "text": [
+                          "Hi. Welcome. Please select one of the options below"
+                        ]
+                      }
+                    },
+                    {
+                      "payload": responseobj
+                    }
+                  ]
+                      });         
+                  }
     
       
 };
