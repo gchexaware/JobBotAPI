@@ -162,7 +162,7 @@ module.exports = function(app) {
            generateOTP(res,mobileNo);
         break;
         case 'associateOTP': 
-        var mobileNo = "9502842849";//9502842849//req.body.originalDetectIntentRequest.payload.mobileNo;
+        var mobileNo = "9884320227";//9502842849//req.body.originalDetectIntentRequest.payload.mobileNo;
         // getCandidateProfile(res,OTP);
         generateOTP(res,mobileNo);
      break;
