@@ -157,14 +157,14 @@ module.exports = function(app) {
             getBranchLocation(res);
         break;  
         case 'generateOTP': 
-           // var mobileNo = "";//9502842849//req.body.originalDetectIntentRequest.payload.mobileNo;
+            var mobileNo = "9884320227";//9502842849//req.body.originalDetectIntentRequest.payload.mobileNo;
            // getCandidateProfile(res,OTP);
-           // generateOTP(res,mobileNo);
+           generateOTP(res,mobileNo);
         break;
         case 'associateOTP': 
         var mobileNo = "9502842849";//9502842849//req.body.originalDetectIntentRequest.payload.mobileNo;
         // getCandidateProfile(res,OTP);
-         //generateOTP(res,mobileNo);
+        generateOTP(res,mobileNo);
      break;
         case 'verifyOTP': 
              var sessionId = req.body.originalDetectIntentRequest.payload.sessionId;
