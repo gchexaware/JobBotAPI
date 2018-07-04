@@ -71,8 +71,8 @@ module.exports = function(app) {
             // })
             
             var keyWord = "";
-            var lat = "12.9715987";
-            var long = "77.5945627";
+            var lat = "43.038902";
+            var long = "-87.906471";
             searchByKeyWord(res,keyWord,lat,long);
             
         break;
@@ -173,8 +173,9 @@ module.exports = function(app) {
             //var otp ='828114';         
             VerifyOTP(res,sessionId,otp);
         break;
-        case 'checkUserExist':               
-            checkUserExist(res);
+        case 'checkUserExist':  
+        var emailId = req.body.originalDetectIntentRequest.payload.emailID;             
+            checkUserExist(res,emailId);
         break;  
         case 'getSavedJobs':        
             getSavedJobs(res);
@@ -1075,12 +1076,12 @@ module.exports = function(app) {
                     });  
     }
 
-    function checkUserExist(response) {  
+    function checkUserExist(response,emailId) {  
         var options = {
 
               host: hostname,
               port: 443,
-              path: '/DirectTalent_CandidateMobile_REST/jaxrs/candidate/exists/'+siteName+'/'+siteCode+'/'+language+'/'+username,
+              path: '/DirectTalent_CandidateMobile_REST/jaxrs/candidate/exists/'+siteName+'/'+siteCode+'/'+language+'/'+emailId,
               method: 'GET',
               headers: {
                   'Content-Type': 'application/json'
