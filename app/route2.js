@@ -10,14 +10,14 @@ module.exports = function(app) {
     //var NodeGeocoder = require('node-geocoder');
 
     // Service hosting details
-    var hostname = 'm.manpower.com'//'dtuat.candidate.manpower.com';
+    var hostname = 'dtuat.candidate.manpower.com';
     var siteName = 'USCampus';
     var siteCode = 'USA';
     var language = 'en';
 
     //User details for call authenticated service
-    var username = 'balajiwcmdev@gmail.com';//"siva@raman5.com";
-    var passw = 'manpower1';
+    var username = "siva@raman5.com" //'balajiwcmdev@gmail.com';
+    var passw = "password"//'manpower1';
     var auth = 'Basic ' + new Buffer(username + ':' + passw).toString('base64');
     console.log("autheeeee= "+auth);
 
